@@ -20,28 +20,50 @@ router.route('/movies')
         return res.send(err);
       }
 
-        res.send({ message: 'Movie Added' });
+    res.send({ message: 'Movie Added' });
     });
-});
+  });
 
 router.route('/movies/:id')
-    .put(function(req,res) {
-        Movie.findOne({ _id: req.params.id }, function(err, movie) {
-            if (err) {
-                return res.send(err);
-            }
+  .put(function(req,res) {
+    Movie.findOne({ _id: req.params.id }, function(err, movie) {
+      if (err) {
+          return res.send(err);
+      }
 
-            for (prop in req.body) {
-                movie[prop] = req.body[prop];
-            }
+      for (prop in req.body) {
+          movie[prop] = req.body[prop];
+      }
 
-            // save the movie
-            movie.save(function(err) {
-              if (err) {
-                return res.send(err);
-              }
+      // save the movie
+      movie.save(function(err) {
+        if (err) {
+          return res.send(err);
+        }
 
-            res.json({ message: 'Movie updated!' });
-        });
+      res.json({ message: 'Movie updated!' });
+      });
     });
-});
+  })
+  .get(function(req, res) {
+    Movie.findOne({ _id: req.params.id}, function(err, movie) {
+      if (err) {
+        return res.send(err);
+      }
+
+      res.json(movie);
+    });
+  })
+  .delete(function(req, res) {
+    Movie.remove({
+      _id: req.params.id
+    }, function(err, movie) {
+      if (err) {
+        return res.send(err);
+      }
+
+      res.json({ message: 'Succesfully deleted' });
+    });
+  });
+
+module.exports = router;
